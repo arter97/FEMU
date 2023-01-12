@@ -303,6 +303,20 @@ int module_load(const char *prefix, const char *name, Error **errp)
     }
     rv = 0; /* module not found */
 
+    {   /* notify user about extra package to install */
+        const char *pkg = NULL;
+        if (!strcmp(prefix, "block-"))
+           pkg = "qemu-block-extra";
+        else if (!strcmp(prefix, "ui-")
+               || !strcmp(prefix, "audio-")
+               || !strcmp(module_name, "virtio-gpu-gl"))
+           pkg = "qemu-system-gui";
+        if (pkg)
+          fprintf(stderr,
+           "qemu: module %s%s not found, do you want to install %s package?\n",
+                  prefix, module_name, pkg);
+    }
+
 out:
     if (rv <= 0) {
         g_hash_table_remove(loaded_modules, module_name);

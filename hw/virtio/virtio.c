@@ -340,7 +340,7 @@ qmp_virtio_feature_map_t virtio_net_feature_map[] = {
 qmp_virtio_feature_map_t virtio_scsi_feature_map[] = {
     FEATURE_ENTRY(VIRTIO_SCSI_F_INOUT, \
             "VIRTIO_SCSI_F_INOUT: Requests including read and writable data "
-            "buffers suppoted"),
+            "buffers supported"),
     FEATURE_ENTRY(VIRTIO_SCSI_F_HOTPLUG, \
             "VIRTIO_SCSI_F_HOTPLUG: Reporting and handling hot-plug events "
             "supported"),

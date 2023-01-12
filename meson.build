@@ -3631,7 +3631,7 @@ endif
 
 subdir('scripts')
 subdir('tools')
-subdir('pc-bios')
+#subdir('pc-bios')
 subdir('docs')
 subdir('tests')
 if gtk.found()

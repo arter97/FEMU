@@ -441,6 +441,11 @@ static void pc_i440fx_7_2_machine_options(MachineClass *m)
     pc_i440fx_machine_options(m);
     m->alias = "pc";
     m->is_default = true;
+#ifdef CONFIG_MICROVM_DEFAULT
+    m->is_default = false;
+#else
+    m->is_default = true;
+#endif
     pcmc->default_cpu_version = 1;
 }
 
