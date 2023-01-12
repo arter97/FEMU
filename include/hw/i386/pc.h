@@ -233,6 +233,9 @@ extern const size_t pc_compat_4_1_len;
 extern GlobalProperty pc_compat_4_0[];
 extern const size_t pc_compat_4_0_len;
 
+extern GlobalProperty host_phys_bits_compat[];
+extern const size_t host_phys_bits_compat_len;
+
 extern GlobalProperty pc_compat_3_1[];
 extern const size_t pc_compat_3_1_len;
 

@@ -178,8 +178,29 @@ const size_t hw_compat_2_11_len = G_N_ELEMENTS(hw_compat_2_11);
 GlobalProperty hw_compat_2_10[] = {
     { "virtio-mouse-device", "wheel-axis", "false" },
     { "virtio-tablet-device", "wheel-axis", "false" },
+    { "e1000", "romfile", "compat-256k-efi-e1000.rom" },
+    { "ne2000", "romfile", "compat-256k-efi-ne2k_pci.rom" },
+    { "pcnet", "romfile", "compat-256k-efi-pcnet.rom" },
+    { "rtl8139", "romfile", "compat-256k-efi-rtl8139.rom" },
+    { "virtio-net-pci", "romfile", "compat-256k-efi-virtio.rom" },
 };
 const size_t hw_compat_2_10_len = G_N_ELEMENTS(hw_compat_2_10);
+/*
+ * ^^ (LP: #1713490)
+ * older IPXE roms were smaller, but just changing this size on ipxe upgrades
+ * breaks migration and save/restore as the PCI bar sizes are not allowed to
+ * change.
+ * This is essentially a per Distribution release detail depending
+ * on which ipxe roms (and which options on build) are bundled with an qemu.
+ * To fix migrations define a compat for anything older than the bump of the
+ * rom size (=pre-bionic = <=2.10) and map older machine types to filenames.
+ * We can then provide compat-roms (essentially the old build on new paths) for
+ * those.
+ * We only support the defaults for migrations (shutdown, move, start and
+ * essentially everything that does a full restart/init works without this
+ * indirection), so only map those whose default rom was on the efi-* roms
+ * which now crossed 256k to use the newer roms for anything else.
+ */
 
 GlobalProperty hw_compat_2_9[] = {
     { "pci-bridge", "shpc", "off" },
@@ -229,16 +250,28 @@ GlobalProperty hw_compat_2_5[] = {
 };
 const size_t hw_compat_2_5_len = G_N_ELEMENTS(hw_compat_2_5);
 
+#define HW_COMPAT_2_4_DEFS \
+    /* Optional because the 'scsi' property is Linux-only */ \
+    { "virtio-blk-device", "scsi", "true", .optional = true }, \
+    { "e1000", "extra_mac_registers", "off" }, \
+    { "virtio-pci", "x-disable-pcie", "on" }, \
+    { "virtio-pci", "migrate-extra", "off" }, \
+    { "fw_cfg_mem", "dma_enabled", "off" }, \
+    { "fw_cfg_io", "dma_enabled", "off" }, \
+
 GlobalProperty hw_compat_2_4[] = {
-    /* Optional because the 'scsi' property is Linux-only */
-    { "virtio-blk-device", "scsi", "true", .optional = true },
-    { "e1000", "extra_mac_registers", "off" },
-    { "virtio-pci", "x-disable-pcie", "on" },
-    { "virtio-pci", "migrate-extra", "off" },
-    { "fw_cfg_mem", "dma_enabled", "off" },
-    { "fw_cfg_io", "dma_enabled", "off" }
+    HW_COMPAT_2_4_DEFS
 };
 const size_t hw_compat_2_4_len = G_N_ELEMENTS(hw_compat_2_4);
+
+// workaround for bug 1902654 / 1829868, see pc_i440fx_wily_machine_options in hw/i386/pc_piix.c
+GlobalProperty hw_compat_2_4_wily[] = {
+    HW_COMPAT_2_4_DEFS
+    { "migration", "send-configuration", "off" },
+    { "migration", "send-section-footer", "off" },
+    { "migration", "store-global-state", "off" },
+};
+const size_t hw_compat_2_4_wily_len = G_N_ELEMENTS(hw_compat_2_4_wily);
 
 GlobalProperty hw_compat_2_3[] = {
     { "virtio-blk-pci", "any_layout", "off" },

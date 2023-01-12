@@ -136,7 +136,6 @@ static PropValue kvm_default_props[] = {
     { "kvm-msi-ext-dest-id", "off" },
     { "acpi", "off" },
     { "monitor", "off" },
-    { "svm", "off" },
     { NULL, NULL },
 };
 

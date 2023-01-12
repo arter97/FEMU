@@ -4713,11 +4713,14 @@ static void spapr_machine_latest_class_options(MachineClass *mc)
 }
 
 #define DEFINE_SPAPR_MACHINE(suffix, verstr, latest)                 \
+    DEFINE_SPAPR_MACHINE_NAMED(suffix, suffix, verstr, latest)
+
+#define DEFINE_SPAPR_MACHINE_NAMED(qemuver, suffix, verstr, latest)  \
     static void spapr_machine_##suffix##_class_init(ObjectClass *oc, \
                                                     void *data)      \
     {                                                                \
         MachineClass *mc = MACHINE_CLASS(oc);                        \
-        spapr_machine_##suffix##_class_options(mc);                  \
+        spapr_machine_##qemuver##_class_options(mc);                 \
         if (latest) {                                                \
             spapr_machine_latest_class_options(mc);                  \
         }                                                            \
@@ -4741,7 +4744,7 @@ static void spapr_machine_7_2_class_options(MachineClass *mc)
     /* Defaults for the latest behaviour inherited from the base class */
 }
 
-DEFINE_SPAPR_MACHINE(7_2, "7.2", true);
+DEFINE_SPAPR_MACHINE(7_2, "7.2", false);
 
 /*
  * pseries-7.1
@@ -5156,11 +5159,16 @@ DEFINE_SPAPR_MACHINE(2_6, "2.6", false);
  * pseries-2.5
  */
 
+/*
+ * ddw was backported to 2.6 (Yakkety), so we have to disable it in <=2.5
+ * can be dropped when dropping Yakkety machine type (18.10)
+ */
 static void spapr_machine_2_5_class_options(MachineClass *mc)
 {
     SpaprMachineClass *smc = SPAPR_MACHINE_CLASS(mc);
     static GlobalProperty compat[] = {
         { "spapr-vlan", "use-rx-buffer-pools", "off" },
+        { TYPE_SPAPR_PCI_HOST_BRIDGE, "ddw", "off" },
     };
 
     spapr_machine_2_6_class_options(mc);
@@ -5228,6 +5236,35 @@ static void spapr_machine_2_1_class_options(MachineClass *mc)
     compat_props_add(mc->compat_props, hw_compat_2_1, hw_compat_2_1_len);
 }
 DEFINE_SPAPR_MACHINE(2_1, "2.1", false);
+
+/* Ubuntu machine types */
+DEFINE_SPAPR_MACHINE_NAMED(2_5, ubuntu_xenial, "xenial", false);
+DEFINE_SPAPR_MACHINE_NAMED(2_6, ubuntu_yakkety, "yakkety", false);
+DEFINE_SPAPR_MACHINE_NAMED(2_8, ubuntu_zesty, "zesty", false);
+DEFINE_SPAPR_MACHINE_NAMED(2_10, ubuntu_artful, "artful", false);
+DEFINE_SPAPR_MACHINE_NAMED(2_11, ubuntu_bionic, "bionic", false);
+DEFINE_SPAPR_MACHINE_NAMED(2_12, ubuntu_cosmic, "cosmic", false);
+DEFINE_SPAPR_MACHINE_NAMED(3_1, ubuntu_disco, "disco", false);
+DEFINE_SPAPR_MACHINE_NAMED(4_0, ubuntu_eoan, "eoan", false);
+DEFINE_SPAPR_MACHINE_NAMED(4_2, ubuntu_focal, "focal", false);
+DEFINE_SPAPR_MACHINE_NAMED(5_0, ubuntu_groovy, "groovy", false);
+DEFINE_SPAPR_MACHINE_NAMED(5_2, ubuntu_hirsute, "hirsute", false);
+DEFINE_SPAPR_MACHINE_NAMED(6_0, ubuntu_impish, "impish", false);
+DEFINE_SPAPR_MACHINE_NAMED(6_2, ubuntu_jammy, "jammy", false);
+DEFINE_SPAPR_MACHINE_NAMED(6_2, ubuntu_kinetic, "kinetic", true);
+
+/* Special 2.11 type for 1761372, since 2.12 is unreleased and 18.04 is 2.11 */
+static void spapr_machine_2_11_sxxm_class_options(MachineClass *mc)
+{
+    SpaprMachineClass *smc = SPAPR_MACHINE_CLASS(mc);
+
+    spapr_machine_2_11_class_options(mc);
+    smc->default_caps.caps[SPAPR_CAP_CFPC] = SPAPR_CAP_WORKAROUND;
+    smc->default_caps.caps[SPAPR_CAP_SBBC] = SPAPR_CAP_WORKAROUND;
+    smc->default_caps.caps[SPAPR_CAP_IBS] = SPAPR_CAP_FIXED_CCD;
+}
+DEFINE_SPAPR_MACHINE_NAMED(2_11_sxxm, ubuntu_bionic_sxxm, "bionic-sxxm", false);
+/* end Special 2.11 type for 1761372 */
 
 static void spapr_machine_register_types(void)
 {

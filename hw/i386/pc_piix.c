@@ -348,7 +348,6 @@ static void pc_compat_2_2_fn(MachineState *machine)
 static void pc_compat_2_1_fn(MachineState *machine)
 {
     pc_compat_2_2_fn(machine);
-    x86_cpu_change_kvm_default("svm", NULL);
 }
 
 static void pc_compat_2_0_fn(MachineState *machine)
@@ -440,12 +439,7 @@ static void pc_i440fx_7_2_machine_options(MachineClass *m)
     PCMachineClass *pcmc = PC_MACHINE_CLASS(m);
     pc_i440fx_machine_options(m);
     m->alias = "pc";
-    m->is_default = true;
-#ifdef CONFIG_MICROVM_DEFAULT
     m->is_default = false;
-#else
-    m->is_default = true;
-#endif
     pcmc->default_cpu_version = 1;
 }
 
@@ -899,3 +893,285 @@ static void xenfv_3_1_machine_options(MachineClass *m)
 DEFINE_PC_MACHINE(xenfv, "xenfv-3.1", pc_xen_hvm_init,
                   xenfv_3_1_machine_options);
 #endif
+
+/* Ubuntu machine types */
+static void pc_trusty_machine_options(MachineClass *m)
+{
+    pc_i440fx_2_0_machine_options(m);
+    m->desc = "Ubuntu 14.04 PC (i440FX + PIIX, 1996)";
+}
+DEFINE_I440FX_MACHINE(trusty, "pc-i440fx-trusty", pc_compat_2_0_fn,
+                      pc_trusty_machine_options)
+
+static void pc_xenial_machine_options(MachineClass *m)
+{
+    pc_i440fx_2_5_machine_options(m);
+    m->desc = "Ubuntu 16.04 PC (i440FX + PIIX, 1996)";
+}
+DEFINE_I440FX_MACHINE(xenial, "pc-i440fx-xenial", NULL,
+                      pc_xenial_machine_options);
+
+static void pc_yakkety_machine_options(MachineClass *m)
+{
+    pc_i440fx_2_6_machine_options(m);
+    m->desc = "Ubuntu 16.10 PC (i440FX + PIIX, 1996)";
+}
+DEFINE_I440FX_MACHINE(yakkety, "pc-i440fx-yakkety", NULL,
+                      pc_yakkety_machine_options);
+
+static void pc_zesty_machine_options(MachineClass *m)
+{
+    pc_i440fx_2_8_machine_options(m);
+    m->desc = "Ubuntu 17.04 PC (i440FX + PIIX, 1996)";
+}
+DEFINE_I440FX_MACHINE(zesty, "pc-i440fx-zesty", NULL,
+                      pc_zesty_machine_options);
+
+static void pc_artful_machine_options(MachineClass *m)
+{
+    pc_i440fx_2_10_machine_options(m);
+    m->desc = "Ubuntu 17.10 PC (i440FX + PIIX, 1996)";
+}
+DEFINE_I440FX_MACHINE(artful, "pc-i440fx-artful", NULL,
+                      pc_artful_machine_options);
+
+static void pc_bionic_machine_options(MachineClass *m)
+{
+    pc_i440fx_2_11_machine_options(m);
+    m->desc = "Ubuntu 18.04 PC (i440FX + PIIX, 1996)";
+}
+DEFINE_I440FX_MACHINE(bionic, "pc-i440fx-bionic", NULL,
+                      pc_bionic_machine_options);
+
+static void pc_bionic_hpb_machine_options(MachineClass *m)
+{
+    pc_i440fx_2_11_machine_options(m);
+    m->desc = "Ubuntu 18.04 PC (i440FX + PIIX, +host-phys-bits=true, 1996)";
+    compat_props_add(m->compat_props,
+        host_phys_bits_compat, host_phys_bits_compat_len);
+}
+DEFINE_I440FX_MACHINE(bionic_hpb, "pc-i440fx-bionic-hpb", NULL,
+                      pc_bionic_hpb_machine_options);
+
+static void pc_cosmic_machine_options(MachineClass *m)
+{
+    pc_i440fx_2_12_machine_options(m);
+    m->desc = "Ubuntu 18.10 PC (i440FX + PIIX, 1996)";
+}
+DEFINE_I440FX_MACHINE(cosmic, "pc-i440fx-cosmic", NULL,
+                      pc_cosmic_machine_options);
+
+static void pc_cosmic_hpb_machine_options(MachineClass *m)
+{
+    pc_i440fx_2_12_machine_options(m);
+    m->desc = "Ubuntu 18.10 PC (i440FX + PIIX +host-phys-bits=true, 1996)";
+    compat_props_add(m->compat_props,
+        host_phys_bits_compat, host_phys_bits_compat_len);
+}
+DEFINE_I440FX_MACHINE(cosmic_hpb, "pc-i440fx-cosmic-hpb", NULL,
+                      pc_cosmic_hpb_machine_options);
+
+static void pc_disco_machine_options(MachineClass *m)
+{
+    pc_i440fx_3_1_machine_options(m);
+    m->desc = "Ubuntu 19.04 PC (i440FX + PIIX, 1996)";
+}
+DEFINE_I440FX_MACHINE(disco, "pc-i440fx-disco", NULL,
+                      pc_disco_machine_options);
+
+static void pc_disco_hpb_machine_options(MachineClass *m)
+{
+    pc_i440fx_3_1_machine_options(m);
+    m->desc = "Ubuntu 19.04 PC (i440FX + PIIX +host-phys-bits=true, 1996)";
+    m->alias = NULL;
+    compat_props_add(m->compat_props,
+        host_phys_bits_compat, host_phys_bits_compat_len);
+}
+DEFINE_I440FX_MACHINE(disco_hpb, "pc-i440fx-disco-hpb", NULL,
+                      pc_disco_hpb_machine_options);
+
+static void pc_eoan_machine_options(MachineClass *m)
+{
+    pc_i440fx_4_0_machine_options(m);
+    m->desc = "Ubuntu 19.10 PC (i440FX + PIIX, 1996)";
+    m->alias = NULL;
+}
+DEFINE_I440FX_MACHINE(eoan, "pc-i440fx-eoan", NULL,
+                      pc_eoan_machine_options);
+
+static void pc_eoan_hpb_machine_options(MachineClass *m)
+{
+    pc_i440fx_4_0_machine_options(m);
+    m->desc = "Ubuntu 19.10 PC (i440FX + PIIX +host-phys-bits=true, 1996)";
+    m->alias = NULL;
+    compat_props_add(m->compat_props,
+        host_phys_bits_compat, host_phys_bits_compat_len);
+}
+DEFINE_I440FX_MACHINE(eoan_hpb, "pc-i440fx-eoan-hpb", NULL,
+                      pc_eoan_hpb_machine_options);
+
+static void pc_focal_machine_options(MachineClass *m)
+{
+    pc_i440fx_4_0_machine_options(m);
+    m->desc = "Ubuntu 20.04 PC (i440FX + PIIX, 1996)";
+    m->alias = NULL;
+}
+DEFINE_I440FX_MACHINE(focal, "pc-i440fx-focal", NULL,
+                      pc_focal_machine_options);
+
+static void pc_focal_hpb_machine_options(MachineClass *m)
+{
+    pc_i440fx_4_0_machine_options(m);
+    m->desc = "Ubuntu 20.04 PC (i440FX + PIIX +host-phys-bits=true, 1996)";
+    m->alias = NULL;
+    compat_props_add(m->compat_props,
+        host_phys_bits_compat, host_phys_bits_compat_len);
+}
+DEFINE_I440FX_MACHINE(focal_hpb, "pc-i440fx-focal-hpb", NULL,
+                      pc_focal_hpb_machine_options);
+
+static void pc_groovy_machine_options(MachineClass *m)
+{
+    pc_i440fx_5_0_machine_options(m);
+    m->desc = "Ubuntu 20.10 PC (i440FX + PIIX, 1996)";
+    m->alias = NULL;
+    m->is_default = false;
+}
+DEFINE_I440FX_MACHINE(groovy, "pc-i440fx-groovy", NULL,
+                      pc_groovy_machine_options);
+
+static void pc_groovy_hpb_machine_options(MachineClass *m)
+{
+    pc_i440fx_5_0_machine_options(m);
+    m->desc = "Ubuntu 20.10 PC (i440FX + PIIX +host-phys-bits=true, 1996)";
+    m->alias = NULL;
+    compat_props_add(m->compat_props,
+        host_phys_bits_compat, host_phys_bits_compat_len);
+}
+DEFINE_I440FX_MACHINE(groovy_hpb, "pc-i440fx-groovy-hpb", NULL,
+                      pc_groovy_hpb_machine_options);
+
+static void pc_hirsute_machine_options(MachineClass *m)
+{
+    pc_i440fx_5_2_machine_options(m);
+    m->desc = "Ubuntu 21.04 PC (i440FX + PIIX, 1996)";
+    m->is_default = false;
+}
+DEFINE_I440FX_MACHINE(hirsute, "pc-i440fx-hirsute", NULL,
+                      pc_hirsute_machine_options);
+
+static void pc_hirsute_hpb_machine_options(MachineClass *m)
+{
+    pc_i440fx_5_1_machine_options(m);
+    m->desc = "Ubuntu 21.04 PC (i440FX + PIIX +host-phys-bits=true, 1996)";
+    m->alias = NULL;
+    compat_props_add(m->compat_props,
+        host_phys_bits_compat, host_phys_bits_compat_len);
+}
+DEFINE_I440FX_MACHINE(hirsute_hpb, "pc-i440fx-hirsute-hpb", NULL,
+                      pc_hirsute_hpb_machine_options);
+
+static void pc_impish_machine_options(MachineClass *m)
+{
+    pc_i440fx_6_0_machine_options(m);
+    m->desc = "Ubuntu 21.10 PC (i440FX + PIIX, 1996)";
+    m->is_default = false;
+}
+DEFINE_I440FX_MACHINE(impish, "pc-i440fx-impish", NULL,
+                      pc_impish_machine_options);
+
+static void pc_impish_hpb_machine_options(MachineClass *m)
+{
+    pc_i440fx_6_0_machine_options(m);
+    m->desc = "Ubuntu 21.10 PC (i440FX + PIIX +host-phys-bits=true, 1996)";
+    m->alias = NULL;
+    compat_props_add(m->compat_props,
+        host_phys_bits_compat, host_phys_bits_compat_len);
+}
+DEFINE_I440FX_MACHINE(impish_hpb, "pc-i440fx-impish-hpb", NULL,
+                      pc_impish_hpb_machine_options);
+
+static void pc_jammy_machine_options(MachineClass *m)
+{
+    pc_i440fx_6_2_machine_options(m);
+    m->desc = "Ubuntu 22.04 PC (i440FX + PIIX, 1996)";
+    m->is_default = false;
+}
+DEFINE_I440FX_MACHINE(jammy, "pc-i440fx-jammy", NULL,
+                      pc_jammy_machine_options);
+
+static void pc_jammy_hpb_machine_options(MachineClass *m)
+{
+    pc_i440fx_6_2_machine_options(m);
+    m->desc = "Ubuntu 22.04 PC (i440FX + PIIX +host-phys-bits=true, 1996)";
+    m->alias = NULL;
+    compat_props_add(m->compat_props,
+        host_phys_bits_compat, host_phys_bits_compat_len);
+}
+DEFINE_I440FX_MACHINE(jammy_hpb, "pc-i440fx-jammy-hpb", NULL,
+                      pc_jammy_hpb_machine_options);
+
+static void pc_kinetic_machine_options(MachineClass *m)
+{
+    pc_i440fx_7_0_machine_options(m);
+    m->desc = "Ubuntu 22.10 PC (i440FX + PIIX, 1996)";
+    m->alias = "ubuntu";
+#ifdef CONFIG_MICROVM_DEFAULT
+    m->is_default = false;
+#else
+    m->is_default = true;
+#endif
+}
+DEFINE_I440FX_MACHINE(kinetic, "pc-i440fx-kinetic", NULL,
+                      pc_kinetic_machine_options);
+
+static void pc_kinetic_hpb_machine_options(MachineClass *m)
+{
+    pc_i440fx_7_0_machine_options(m);
+    m->desc = "Ubuntu 22.10 PC (i440FX + PIIX +host-phys-bits=true, 1996)";
+    m->alias = NULL;
+    compat_props_add(m->compat_props,
+        host_phys_bits_compat, host_phys_bits_compat_len);
+}
+DEFINE_I440FX_MACHINE(kinetic_hpb, "pc-i440fx-kinetic-hpb", NULL,
+                      pc_kinetic_hpb_machine_options);
+
+/*
+ * Due to bug 1621042 we have to consider the broken old wily machine
+ * type as valid xenial type to ensure older VMs that got created prio
+ * to fixing 1621042 will still work.
+ * Therefore we have to keep it as-is (sans alias and being default) for
+ * the same time we keep the fixed xenial type above.
+ *
+ * Further bug 1829868 identified issues due to the wily type being released
+ * defined as a hybrid of pc_i440fx_2_4_machine_options and pc_compat_2_3.
+ * That mismatch caused issues since qemu 2.11 due to some definitions
+ * moving between those version references.
+ * This introduces pc_i440fx_wily_machine_options which encapsulates the
+ * old behavior as it was (this is the purpose of machine types).
+ *
+ * Further bug 1902654 identified issues due to the upstream rework of types
+ * that made the wily type change some attributes in >=Eoan.
+ * As we did in Bionic for 1829868 we need to use a 2_4/2_3 hybrid type to
+ * match what was initially shipped.
+ */
+static void pc_i440fx_wily_machine_options(MachineClass *m)
+{
+    PCMachineClass *pcmc = PC_MACHINE_CLASS(m);
+    pc_i440fx_2_5_machine_options(m);
+    m->hw_version = "2.4.0";
+    pcmc->broken_reserved_end = true;
+    compat_props_add(m->compat_props, hw_compat_2_4_wily, hw_compat_2_4_wily_len);
+    compat_props_add(m->compat_props, pc_compat_2_4, pc_compat_2_4_len);
+}
+
+static void pc_wily_machine_options(MachineClass *m)
+{
+    pc_i440fx_wily_machine_options(m);
+    pc_i440fx_machine_options(m);
+    m->desc = "Ubuntu 15.04 PC (i440FX + PIIX, 1996)",
+    m->default_display = "std";
+}
+
+DEFINE_I440FX_MACHINE(wily, "pc-i440fx-wily", NULL,
+                      pc_wily_machine_options);

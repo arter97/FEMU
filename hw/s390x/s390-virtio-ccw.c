@@ -794,12 +794,15 @@ bool css_migration_enabled(void)
 }
 
 #define DEFINE_CCW_MACHINE(suffix, verstr, latest)                            \
+    DEFINE_CCW_MACHINE_NAMED(suffix, suffix, verstr, latest)
+
+#define DEFINE_CCW_MACHINE_NAMED(qemuver, suffix, verstr, latest)             \
     static void ccw_machine_##suffix##_class_init(ObjectClass *oc,            \
                                                   void *data)                 \
     {                                                                         \
         MachineClass *mc = MACHINE_CLASS(oc);                                 \
-        ccw_machine_##suffix##_class_options(mc);                             \
-        mc->desc = "Virtual s390x machine (version " verstr ")";              \
+        ccw_machine_##qemuver##_class_options(mc);                            \
+        mc->desc = "VirtIO-ccw based S390 machine " verstr;                   \
         if (latest) {                                                         \
             mc->alias = "s390-ccw-virtio";                                    \
             mc->is_default = true;                                            \
@@ -809,7 +812,7 @@ bool css_migration_enabled(void)
     {                                                                         \
         MachineState *machine = MACHINE(obj);                                 \
         current_mc = S390_CCW_MACHINE_CLASS(MACHINE_GET_CLASS(machine));          \
-        ccw_machine_##suffix##_instance_options(machine);                     \
+        ccw_machine_##qemuver##_instance_options(machine);                     \
     }                                                                         \
     static const TypeInfo ccw_machine_##suffix##_info = {                     \
         .name = MACHINE_TYPE_NAME("s390-ccw-virtio-" verstr),                 \
@@ -830,7 +833,7 @@ static void ccw_machine_7_2_instance_options(MachineState *machine)
 static void ccw_machine_7_2_class_options(MachineClass *mc)
 {
 }
-DEFINE_CCW_MACHINE(7_2, "7.2", true);
+DEFINE_CCW_MACHINE(7_2, "7.2", false);
 
 static void ccw_machine_7_1_instance_options(MachineState *machine)
 {
@@ -1186,6 +1189,22 @@ static void ccw_machine_2_4_class_options(MachineClass *mc)
     compat_props_add(mc->compat_props, compat, G_N_ELEMENTS(compat));
 }
 DEFINE_CCW_MACHINE(2_4, "2.4", false);
+
+/* Ubuntu machine types */
+DEFINE_CCW_MACHINE_NAMED(2_5, ubuntu_xenial, "xenial", false);
+DEFINE_CCW_MACHINE_NAMED(2_6, ubuntu_yakkety, "yakkety", false);
+DEFINE_CCW_MACHINE_NAMED(2_8, ubuntu_zesty, "zesty", false);
+DEFINE_CCW_MACHINE_NAMED(2_10, ubuntu_artful, "artful", false);
+DEFINE_CCW_MACHINE_NAMED(2_11, ubuntu_bionic, "bionic", false);
+DEFINE_CCW_MACHINE_NAMED(2_12, ubuntu_cosmic, "cosmic", false);
+DEFINE_CCW_MACHINE_NAMED(3_1, ubuntu_disco, "disco", false);
+DEFINE_CCW_MACHINE_NAMED(3_1, ubuntu_eoan, "eoan", false);
+DEFINE_CCW_MACHINE_NAMED(4_2, ubuntu_focal, "focal", false);
+DEFINE_CCW_MACHINE_NAMED(5_0, ubuntu_groovy, "groovy", false);
+DEFINE_CCW_MACHINE_NAMED(5_2, ubuntu_hirsute, "hirsute", false);
+DEFINE_CCW_MACHINE_NAMED(6_0, ubuntu_impish, "impish", false);
+DEFINE_CCW_MACHINE_NAMED(6_2, ubuntu_jammy, "jammy", false);
+DEFINE_CCW_MACHINE_NAMED(6_2, ubuntu_kinetic, "kinetic", true);
 
 static void ccw_machine_register_types(void)
 {

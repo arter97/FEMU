@@ -445,6 +445,10 @@ extern const size_t hw_compat_2_5_len;
 extern GlobalProperty hw_compat_2_4[];
 extern const size_t hw_compat_2_4_len;
 
+// workaround for bug 1902654 / 1829868, see pc_i440fx_wily_machine_options in hw/i386/pc_piix.c
+extern GlobalProperty hw_compat_2_4_wily[];
+extern const size_t hw_compat_2_4_wily_len;
+
 extern GlobalProperty hw_compat_2_3[];
 extern const size_t hw_compat_2_3_len;
 
